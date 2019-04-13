@@ -597,7 +597,8 @@ bool CView::onWheel (const CPoint& where, const CMouseWheelAxis& axis, const flo
 	if (axis == kMouseWheelAxisX)
 	{
 		#if MAC	// mac os x 10.4.x swaps the axis if the shift modifier is down
-		if (!(buttons & kShift))
+		// macOS 10.14 and similar don't any more though so this is wrong on modern macs
+		//if (!(buttons & kShift))
 		#endif
 		return onWheel (where, distance*-1, buttons);
 	}
