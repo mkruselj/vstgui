@@ -289,6 +289,7 @@ void Animator::addAnimation (CView* view, IdStringPtr name, IAnimationTarget* ta
 //-----------------------------------------------------------------------------
 void Animator::removeAnimation (CView* view, IdStringPtr name)
 {
+        std::vector<SharedPointer<Detail::Animation>> toRemove;
 	pImpl->animations.forEach ([&] (const SharedPointer<Detail::Animation>& animation) {
 		if (animation->view == view && animation->name == name)
 		{
@@ -300,14 +301,18 @@ void Animator::removeAnimation (CView* view, IdStringPtr name)
 				animation->done = true;
 				animation->animationTarget->animationFinished (view, name, true);
 			}
-			pImpl->animations.remove (animation);
+			// pImpl->animations.remove (animation);
+			toRemove.push_back(animation);
 		}
 	});
+	for(auto v : toRemove)
+	  pImpl->animations.remove(v);
 }
 
 //-----------------------------------------------------------------------------
 void Animator::removeAnimations (CView* view)
 {
+        std::vector<SharedPointer<Detail::Animation>> toRemove;
 	pImpl->animations.forEach ([&] (const SharedPointer<Detail::Animation>& animation) {
 		if (animation->view == view)
 		{
@@ -319,9 +324,12 @@ void Animator::removeAnimations (CView* view)
 				animation->done = true;
 				animation->animationTarget->animationFinished (view, animation->name.data (), true);
 			}
-			pImpl->animations.remove (animation);
+			// pImpl->animations.remove (animation);
+			toRemove.push_back(animation);
 		}
 	});
+	for(auto v : toRemove)
+	  pImpl->animations.remove(v);
 }
 
 //-----------------------------------------------------------------------------
