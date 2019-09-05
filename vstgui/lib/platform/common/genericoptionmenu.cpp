@@ -15,6 +15,7 @@
 #include "../../idatabrowserdelegate.h"
 #include "../../controls/coptionmenu.h"
 #include "../../controls/cscrollbar.h"
+#include "../../cvstguitimer.h"
 
 /// Surge ///
 #ifndef VSTGUI_OPTION_MENU_NEVER_ANIMATE
@@ -634,7 +635,8 @@ void GenericOptionMenu::removeModalView (PlatformOptionMenuResult result)
 			self->impl->container = nullptr;
 		};
 #if VSTGUI_OPTION_MENU_NEVER_ANIMATE
-		onCompletion(this);
+                auto self = shared(this);
+		Call::later([self, onCompletion]() { onCompletion(self.get()); }, 0.001 );
 #else
 		auto self = shared (this);
 		impl->container->addAnimation (
