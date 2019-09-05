@@ -16,6 +16,15 @@
 #include "../../controls/coptionmenu.h"
 #include "../../controls/cscrollbar.h"
 
+/// Surge ///
+#ifndef VSTGUI_OPTION_MENU_NEVER_ANIMATE
+#	if LINUX  // serious lag with animation on the Linux platform
+#		define VSTGUI_OPTION_MENU_NEVER_ANIMATE 1
+#	else
+#		define VSTGUI_OPTION_MENU_NEVER_ANIMATE 0
+#	endif
+#endif
+
 //------------------------------------------------------------------------
 namespace VSTGUI {
 namespace GenericOptionMenuDetail {
@@ -264,6 +273,11 @@ private:
 			}
 			else
 			{
+#if VSTGUI_OPTION_MENU_NEVER_ANIMATE
+				/// Surge ///
+				subMenuView->getParentView ()->asViewContainer ()->removeView (subMenuView);
+				subMenuView = nullptr;
+#else
 				auto view = shared (subMenuView);
 				subMenuView = nullptr;
 				view->addAnimation (
@@ -279,6 +293,7 @@ private:
 					if (auto frame = db->getFrame ())
 						frame->setFocusView (db);
 				}
+#endif
 			}
 		}
 	}
@@ -517,7 +532,6 @@ CView* setupGenericOptionMenu (Proc clickCallback, CViewContainer* container,
 	viewRect.inset (-1, -1);
 	viewRect.offset (1, 1);
 	auto decorView = new CViewContainer (viewRect);
-	decorView->setAlphaValue (0.f);
 	decorView->setBackgroundColor (
 	    GenericOptionMenuDetail::makeDarkerColor (theme.backgroundColor));
 	decorView->setBackgroundColorDrawStyle (kDrawStroked);
@@ -538,10 +552,13 @@ CView* setupGenericOptionMenu (Proc clickCallback, CViewContainer* container,
 	decorView->addView (browser);
 
 	container->addView (decorView);
+#if !VSTGUI_OPTION_MENU_NEVER_ANIMATE /// Surge ///
 	using namespace Animation;
+	decorView->setAlphaValue (0.f);
 	decorView->addAnimation ("AlphaAnimation", new AlphaValueAnimation (1.f, true),
 	                         new CubicBezierTimingFunction (
 	                             CubicBezierTimingFunction::easyIn (theme.menuAnimationTime)));
+#endif
 	frame->setFocusView (browser);
 	if (!parentDataSource && optionMenu->isCheckStyle ())
 	{
@@ -605,21 +622,29 @@ void GenericOptionMenu::removeModalView (PlatformOptionMenuResult result)
 		if (impl->listener)
 			impl->listener->optionMenuPopupStopped ();
 
+		/// Surge ///
+		auto onCompletion = [result](GenericOptionMenu *self) {
+			if (!self->impl->container)
+				return;
+			auto callback = std::move (self->impl->callback);
+			self->impl->callback = nullptr;
+			self->impl->container->unregisterViewMouseListener (self);
+			self->impl->frame->endModalViewSession (self->impl->modalViewSession);
+			callback (self->impl->menu, result);
+			self->impl->container = nullptr;
+		};
+#if VSTGUI_OPTION_MENU_NEVER_ANIMATE
+		onCompletion(this);
+#else
 		auto self = shared (this);
 		impl->container->addAnimation (
 		    "OptionMenuDone", new AlphaValueAnimation (0.f, true),
 		    new CubicBezierTimingFunction (
 		        CubicBezierTimingFunction::easyIn (impl->theme.menuAnimationTime)),
-		    [self, result] (CView*, const IdStringPtr, IAnimationTarget*) {
-				if (!self->impl->container)
-					return;
-			    auto callback = std::move (self->impl->callback);
-			    self->impl->callback = nullptr;
-			    self->impl->container->unregisterViewMouseListener (self);
-			    self->impl->frame->endModalViewSession (self->impl->modalViewSession);
-			    callback (self->impl->menu, result);
-			    self->impl->container = nullptr;
+		    [self, onCompletion] (CView*, const IdStringPtr, IAnimationTarget*) {
+				onCompletion(self.get());
 		    });
+#endif
 	}
 }
 
