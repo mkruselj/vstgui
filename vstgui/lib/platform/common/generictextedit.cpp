@@ -355,7 +355,8 @@ CMouseEventResult STBTextEditView::onMouseDown (CFrame* frame,
 	auto where = _where;
 	if (auto parent = getParentView ())
 	{
-		parent->translateToLocal (where);
+		/* SURGE CHANGE to remove this translate. See github #1104 */
+		/* parent-> */ translateToLocal (where);
 		if (buttons.isLeftButton () && hitTest (where, buttons))
 		{
 			CPoint where2 (where);
