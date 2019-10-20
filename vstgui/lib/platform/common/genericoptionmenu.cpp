@@ -289,12 +289,12 @@ private:
 					    if (view->isAttached ())
 						    view->getParentView ()->asViewContainer ()->removeView (view);
 				    });
+#endif
 				if (db)
 				{
 					if (auto frame = db->getFrame ())
 						frame->setFocusView (db);
 				}
-#endif
 			}
 		}
 	}
