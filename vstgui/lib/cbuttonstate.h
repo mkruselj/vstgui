@@ -37,7 +37,9 @@ enum CButton
 	/** system mouse wheel setting is inverted (Only valid for onMouseWheel methods). The distance
 	   value is already transformed back to non inverted. But for scroll views we need to know if we
 	   need to invert it back. */
-	kMouseWheelInverted = 1 << 11
+	kMouseWheelInverted = 1 << 11,
+	/** event caused by touch gesture instead of mouse */
+	kTouch = 1 << 12
 };
 
 //-----------------------------------------------------------------------------
@@ -77,6 +79,9 @@ public:
 	bool isAppleSet () const { return hasBit<int32_t> (state, kApple); }
 
 	bool isMouseWheelInverted () const { return hasBit<int32_t> (state, kMouseWheelInverted); }
+
+	/** returns true if this event was caused by a touch gesture instead of the mouse */
+	bool isTouch () const { return hasBit<int32_t> (state, kTouch); }
 
 	int32_t operator() () const { return state; }
 	CButtonState& operator= (int32_t s) { state = s; return *this; }

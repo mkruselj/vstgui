@@ -81,6 +81,8 @@ protected:
 	bool inPaint;
 	bool mouseInside;
 
+	bool isTouchActive;
+
 	RGNDATA* updateRegionList;
 	DWORD updateRegionListSize;
 	CCursorType lastSetCursor;
