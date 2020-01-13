@@ -79,6 +79,7 @@ Win32Frame::Win32Frame (IPlatformFrameCallback* frame, const CRect& size, HWND p
 , mouseInside (false)
 , updateRegionList (0)
 , updateRegionListSize (0)
+, isTouchActive(false)
 {
 	useD2D ();
 	if (parentType == PlatformType::kHWNDTopLevel)
@@ -689,29 +690,24 @@ LONG_PTR WINAPI Win32Frame::proc (HWND hwnd, UINT message, WPARAM wParam, LPARAM
 	IPlatformFrameCallback* pFrame = getFrame ();
 	bool doubleClick = false;
 	
+#define WM_POINTERDOWN                   0x0246
+#define WM_POINTERUP                     0x0247
+#define WM_POINTERROUTEDRELEASED         0x0253
+#define WM_POINTERCAPTURECHANGED         0x024C
+
 	switch (message)
 	{
-		case WM_GESTURE:
+		case WM_POINTERDOWN:
 		{
-			GESTUREINFO gi;
-			ZeroMemory (&gi, sizeof (GESTUREINFO));
-			gi.cbSize = sizeof (GESTUREINFO);
-			BOOL bResult = GetGestureInfo((HGESTUREINFO)lParam, &gi);
-			if (bResult)
-			{
-				// Look for general touch gesture begin and end events and set a flag.
-				// "Mouse" events that occur between GID_BEGIN and GID_END must have
-				// come from the touch gesture, and not the mouse.
-				switch (gi.dwID)
-				{
-					case GID_BEGIN:
-						isTouchActive = true;
-						break;
-					case GID_END:
-						isTouchActive = false;
-						break;
-				}
-			}
+			isTouchActive = true;
+			break;
+		}
+		case WM_POINTERUP:
+		case WM_POINTERROUTEDRELEASED:
+		case WM_POINTERCAPTURECHANGED:
+		{
+			isTouchActive = false;
+			break;
 		}
 		case WM_MOUSEWHEEL:
 		{
