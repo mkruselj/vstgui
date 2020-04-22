@@ -1031,7 +1031,8 @@ bool NSViewFrame::setMouseCursor (CCursorType type)
 			break;
 		}
 		case kCursorNotAllowed: cur = [NSCursor performSelector:@selector(operationNotAllowedCursor)]; break;
-		case kCursorHand: cur = [NSCursor openHandCursor]; break;
+                // SURGE MODIFICATION. You want pointing not grabbing hand here
+		case kCursorHand: cur = [NSCursor pointingHandCursor]; break;
 		case kCursorIBeam: cur = [NSCursor IBeamCursor]; break;
 		default: cur = [NSCursor arrowCursor]; break;
 	}
