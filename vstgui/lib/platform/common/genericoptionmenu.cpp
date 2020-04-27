@@ -636,7 +636,7 @@ void GenericOptionMenu::removeModalView (PlatformOptionMenuResult result)
 		};
 #if VSTGUI_OPTION_MENU_NEVER_ANIMATE
                 auto self = shared(this);
-		Call::later([self, onCompletion]() { onCompletion(self.get()); }, 0.001 );
+		Call::later([self, onCompletion]() { onCompletion(self.get()); }, 1 );
 #else
 		auto self = shared (this);
 		impl->container->addAnimation (
