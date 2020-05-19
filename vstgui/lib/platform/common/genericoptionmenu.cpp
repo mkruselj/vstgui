@@ -442,6 +442,11 @@ private:
 	CCoord maxTitleWidth {-1.};
 	bool hasRightMargin {false};
 	GenericOptionMenuTheme theme;
+
+public:
+	// SURGE
+	bool opensLeft {false};
+	// END SURGE
 };
 
 //------------------------------------------------------------------------
@@ -465,8 +470,11 @@ CView* setupGenericOptionMenu (Proc clickCallback, CViewContainer* container,
 	auto dataSource =
 	    makeOwned<DataSource> (container, optionMenu, clickCallback, theme, parentDataSource);
 	auto maxWidth = dataSource->calculateMaxWidth (frame);
+    // SURGE captures parent width for goleft
+	float parentWidth = 0;
 	if (parentDataSource)
 	{
+		parentWidth = parentDataSource->calculateMaxWidth(frame);
 		viewRect.offset (viewRect.getWidth (), 0);
 		viewRect.setWidth (maxWidth);
 	}
@@ -501,6 +509,10 @@ CView* setupGenericOptionMenu (Proc clickCallback, CViewContainer* container,
 		auto frSize = frame->getViewSize ();
 		frSize.inset (6, 6); // frame margin
 
+		if( parentDataSource && parentDataSource->opensLeft )
+		{
+			dataSource->opensLeft = true;
+		}	
 		if (frSize.bottom < viewRect.bottom)
 		{
 			viewRect.offset (0, frSize.bottom - viewRect.bottom);
@@ -511,12 +523,22 @@ CView* setupGenericOptionMenu (Proc clickCallback, CViewContainer* container,
 		}
 		if (frSize.right < viewRect.right)
 		{
-			viewRect.offset (frSize.right - viewRect.right, 0);
+			float offset = 0;
+			dataSource->opensLeft = true;
+			CPoint xfm( parentWidth, 0 );
+			frame->getTransform().transform( xfm );
+			viewRect.offset (frSize.right - viewRect.right - xfm.x, 0);
+		} else if( dataSource->opensLeft ) {
+			CPoint xfm( parentWidth + maxWidth, 0 );
+			frame->getTransform().transform( xfm );
+			viewRect.offset( -xfm.x, 0 );
 		}
+
 		if (frSize.left > viewRect.left)
 		{
 			viewRect.offset (frSize.left - viewRect.left, 0);
 		}
+		
 		viewRect.bound (frSize);
 		if (maxWidth > viewRect.getWidth ())
 			dataSource->setMaxWidth (viewRect.getWidth ());
