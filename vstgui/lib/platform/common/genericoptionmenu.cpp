@@ -475,7 +475,11 @@ CView* setupGenericOptionMenu (Proc clickCallback, CViewContainer* container,
 	if (parentDataSource)
 	{
 		parentWidth = parentDataSource->calculateMaxWidth(frame);
-		viewRect.offset (viewRect.getWidth (), 0);
+		if( ! parentDataSource->opensLeft )
+		{
+			viewRect.offset (viewRect.getWidth (), 0);
+		}
+		
 		viewRect.setWidth (maxWidth);
 	}
 	else if (optionMenu->isPopupStyle ())
@@ -521,18 +525,23 @@ CView* setupGenericOptionMenu (Proc clickCallback, CViewContainer* container,
 		{
 			viewRect.offset (0, frSize.top - viewRect.top);
 		}
-		if (frSize.right < viewRect.right)
+
+		if( dataSource->opensLeft )
+		{
+			// In this case we haven't transformed myself by our parent over above
+			// so we just knock ourselves back by our width and go left
+			CPoint xfm( maxWidth, 0 );
+			frame->getTransform().transform( xfm );
+			viewRect.offset( -xfm.x, 0 );
+		} 
+		else if (frSize.right < viewRect.right)
 		{
 			float offset = 0;
 			dataSource->opensLeft = true;
 			CPoint xfm( parentWidth, 0 );
 			frame->getTransform().transform( xfm );
 			viewRect.offset (frSize.right - viewRect.right - xfm.x, 0);
-		} else if( dataSource->opensLeft ) {
-			CPoint xfm( parentWidth + maxWidth, 0 );
-			frame->getTransform().transform( xfm );
-			viewRect.offset( -xfm.x, 0 );
-		}
+		} 
 
 		if (frSize.left > viewRect.left)
 		{
