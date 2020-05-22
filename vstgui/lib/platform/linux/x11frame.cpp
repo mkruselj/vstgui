@@ -327,14 +327,27 @@ struct Frame::Impl : IFrameEventHandler
       std::unordered_set<CRect,rectHash> uniqs;
       //std::vector<CRect> uniqs;
       std::vector<CRect> newDR;
+      CPoint p = window.getSize();
+      CRect fullWindow( 0, 0, p.x, p.y );
+      bool isFullRefresh = false;
       for( auto r : dirtyRects )
       {
+         if( r == fullWindow )
+         {
+	    isFullRefresh = true;
+         }
          //if( std::find( uniqs.begin(), uniqs.end(), r ) == uniqs.end() )
          if( uniqs.find( r ) == uniqs.end() )
          {
             newDR.push_back( r );
             uniqs.insert( r );
          }
+      }
+      if( isFullRefresh )
+      {
+         // We only want to do one repaint
+ 	 newDR.clear();
+	 newDR.push_back( fullWindow );
       }
 
 		drawHandler.draw (newDR, [&](CDrawContext* context, const CRect& rect) {
