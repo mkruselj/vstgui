@@ -22,6 +22,7 @@
 #include <cassert>
 #include <iostream>
 #include <unordered_map>
+#include <unordered_set>
 #include <X11/Xlib.h>
 #include <xcb/xcb.h>
 #include <xcb/xcb_util.h>
@@ -311,10 +312,32 @@ struct Frame::Impl : IFrameEventHandler
 		xcb_flush (xcb);
 	}
 
+   struct rectHash {
+      size_t operator() (const CRect &r) const
+         {
+            // these wierd values are "about the size of a screen" and are "random enough to make non-colliding hashes probably"
+            // no further thought was given to them
+            return ((( r.top * 1873 ) + r.left) * 2721 + r.bottom) * 3143 + r.right;
+         }
+   };
 	//------------------------------------------------------------------------
 	void redraw ()
 	{
-		drawHandler.draw (dirtyRects, [&](CDrawContext* context, const CRect& rect) {
+      // We want to uniqify the drawRects before we paint
+      std::unordered_set<CRect,rectHash> uniqs;
+      //std::vector<CRect> uniqs;
+      std::vector<CRect> newDR;
+      for( auto r : dirtyRects )
+      {
+         //if( std::find( uniqs.begin(), uniqs.end(), r ) == uniqs.end() )
+         if( uniqs.find( r ) == uniqs.end() )
+         {
+            newDR.push_back( r );
+            uniqs.insert( r );
+         }
+      }
+
+		drawHandler.draw (newDR, [&](CDrawContext* context, const CRect& rect) {
 			frame->platformDrawRect (context, rect);
 		});
 		dirtyRects.clear ();
