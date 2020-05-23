@@ -343,7 +343,7 @@ struct Frame::Impl : IFrameEventHandler
             uniqs.insert( r );
          }
       }
-      if( isFullRefresh )
+      if( isFullRefresh || newDR.size() > 25 ) // that 25 is just a dumb hack threshold
       {
          // We only want to do one repaint
  	 newDR.clear();
