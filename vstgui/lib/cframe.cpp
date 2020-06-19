@@ -351,6 +351,7 @@ void CFrame::clearMouseViews (const CPoint& where, const CButtonState& buttons, 
 		{
 			lp = where;
 			(*it)->frameToLocal (lp);
+         getTransform().inverse().transform(lp);
 			(*it)->onMouseExited (lp, buttons);
 		#if DEBUG_MOUSE_VIEWS
 			DebugPrint ("mouseExited : %p\n", (*it));
@@ -421,6 +422,7 @@ void CFrame::checkMouseViews (const CPoint& where, const CButtonState& buttons)
 	{
 		lp = where;
 		currentMouseView->frameToLocal (lp);
+      getTransform().inverse().transform(lp);
 		currentMouseView->onMouseExited (lp, buttons);
 		callMouseObserverMouseExited (currentMouseView);
 	#if DEBUG_MOUSE_VIEWS
@@ -439,6 +441,7 @@ void CFrame::checkMouseViews (const CPoint& where, const CButtonState& buttons)
 		{
 			lp = where;
 			vc->frameToLocal (lp);
+         getTransform().inverse().transform(lp);
 			vc->onMouseExited (lp, buttons);
 			callMouseObserverMouseExited (vc);
 		#if DEBUG_MOUSE_VIEWS
@@ -469,6 +472,7 @@ void CFrame::checkMouseViews (const CPoint& where, const CButtonState& buttons)
 		{
 			lp = where;
 			(*it2)->frameToLocal (lp);
+         getTransform().inverse().transform(lp);
 			(*it2)->onMouseEntered (lp, buttons);
 			callMouseObserverMouseEntered ((*it2));
 		#if DEBUG_MOUSE_VIEWS
@@ -494,6 +498,7 @@ void CFrame::checkMouseViews (const CPoint& where, const CButtonState& buttons)
 		{
 			lp = where;
 			(*it2)->frameToLocal (lp);
+         getTransform().inverse().transform(lp);
 			(*it2)->onMouseEntered (lp, buttons);
 			callMouseObserverMouseEntered ((*it2));
 		#if DEBUG_MOUSE_VIEWS
