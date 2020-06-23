@@ -1410,7 +1410,7 @@ void CFrame::invalidRect (const CRect& rect)
 
 	CRect _rect (rect);
 	getTransform ().transform (_rect);
-	_rect.makeIntegral ();
+	_rect.makeIntegralOnlyExpanding ();
 	if (pImpl->collectInvalidRects)
 		pImpl->collectInvalidRects->addRect (_rect);
 	else

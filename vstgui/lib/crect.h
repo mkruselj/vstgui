@@ -68,6 +68,7 @@ struct CRect
 	/** moves this rect to the center of r */
 	inline CRect& centerInside (const CRect& r);
 	inline CRect& makeIntegral ();
+   inline CRect& makeIntegralOnlyExpanding ();
 
 	CCoord left {0.};
 	CCoord top {0.};
@@ -271,6 +272,17 @@ inline CRect& CRect::makeIntegral ()
 	bottom = std::floor (bottom + 0.5);
 	return *this;
 }
+
+// this will give you a rectangle which is integral, but also is outside the given input
+inline CRect& CRect::makeIntegralOnlyExpanding()
+{
+	left = std::floor (left);
+	right = std::ceil (right);
+	top = std::floor (top);
+	bottom = std::ceil (bottom);
+	return *this;
+}
+
 
 //-----------------------------------------------------------------------------
 inline constexpr bool CRect::pointInside (const CPoint& where) const
