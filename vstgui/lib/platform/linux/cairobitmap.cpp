@@ -8,6 +8,12 @@
 #include "cairobitmap.h"
 #include <memory>
 #include <vector>
+#include <iostream>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
+
 
 //------------------------------------------------------------------------
 namespace VSTGUI {
@@ -172,7 +178,14 @@ bool Bitmap::load (const CResourceDescription& desc)
 		}
 		else
 		{
-			path += desc.u.name;
+                        // SURGE CHANGE - if we ask for a file OPEN THE FILE IF IT IS THERE. Thanks.
+			struct stat sb;
+       			auto canStatWithoutResource = stat((char *)(desc.u.name), &sb);
+                        if( canStatWithoutResource == 0 )
+                           path = desc.u.name;
+                        else
+			   path += desc.u.name;
+                        // END SURGE CHANGE
 		}
 		if (auto s = CairoBitmapPrivate::createImageFromPath (path.data ()))
 		{

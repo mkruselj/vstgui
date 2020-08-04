@@ -201,7 +201,7 @@ bool D2DBitmap::load (const CResourceDescription& resourceDesc)
 		resourceStream->Release ();
 	}
 
-#if DEBUG
+// #if DEBUG
 	if (result == false && resourceDesc.type == CResourceDescription::kStringType)
 	{
 		// In DEBUG mode we allow to load the bitmap from a path so that the WYSIWYG editor is usable
@@ -213,7 +213,9 @@ bool D2DBitmap::load (const CResourceDescription& resourceDesc)
 			stream->Release ();
 		}
 	}
-#endif
+   
+//#endif
+   
 	return result;
 }
 
