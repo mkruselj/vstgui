@@ -507,6 +507,16 @@ void Context::fillLinearGradient (CGraphicsPath* path, const CGradient& gradient
 		{
 			if (auto cd = DrawBlock::begin (*this))
 			{
+            if (transformation)
+            {
+               cairo_matrix_t currentMatrix;
+               cairo_matrix_t resultMatrix;
+               auto matrix = convert (*transformation);
+               cairo_get_matrix (cr, &currentMatrix);
+               cairo_matrix_multiply (&resultMatrix, &currentMatrix, &matrix);
+               cairo_set_matrix (cr, &resultMatrix);
+            }
+            
 				auto p = cairoPath->getPath (cr);
 				cairo_append_path (cr, p);
 				cairo_set_source (cr, cairoGradient->getLinearGradient (startPoint, endPoint));
