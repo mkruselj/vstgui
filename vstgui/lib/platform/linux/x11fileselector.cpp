@@ -5,6 +5,7 @@
 #include "../../cfileselector.h"
 #include <unistd.h>
 #include <string>
+#include <stdio.h> // Since we use getline below
 
 //------------------------------------------------------------------------
 namespace VSTGUI {

@@ -121,7 +121,7 @@
 	using std::min;
 	using std::max;
 
-#elif defined(__linux__)
+#elif defined(__linux__) || defined(__FreeBSD__) || defined( __DragonFly__)
     #include <cstdint>
     #include <type_traits>
     #include <algorithm>
@@ -133,7 +133,7 @@
 	#endif
 
 #else
-	#error unsupported compiler
+	#error unsupported operating system
 #endif
 
 #include <atomic>
