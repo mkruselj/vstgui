@@ -80,8 +80,8 @@ static id VSTGUI_NSView_Init (id self, SEL _cmd, void* _frame, NSView* parentVie
 	NSViewFrame* frame = (NSViewFrame*)_frame;
 	NSRect nsSize = nsRectFromCRect (*size);
 
-	__OBJC_SUPER(self)
-	self = objc_msgSendSuper (SUPER, @selector(initWithFrame:), nsSize); // self = [super initWithFrame: nsSize];
+	__OBJC_SUPER(self);
+    self = SuperInitWithFrame (SUPER, @selector(initWithFrame:), nsSize); // self = [super initWithFrame: nsSize];
 	if (self)
 	{
 		OBJC_SET_VALUE(self, _nsViewFrame, frame); //		_vstguiframe = frame;
@@ -160,7 +160,7 @@ static void VSTGUI_NSView_updateTrackingAreas (id self, SEL _cmd)
 	if (viewFrame)
 		viewFrame->initTrackingArea ();
 		
-	objc_msgSendSuper (SUPER, @selector(updateTrackingAreas));
+	SuperUpdateTrackingAreas (SUPER, @selector(updateTrackingAreas));
 }
 
 //------------------------------------------------------------------------------------
@@ -286,7 +286,7 @@ static void VSTGUI_NSView_mouseDown (id self, SEL _cmd, NSEvent* theEvent)
 {
 	__OBJC_SUPER(self)
 	if (![self onMouseDown: theEvent])
-		objc_msgSendSuper (SUPER, @selector(mouseDown:), theEvent);
+		SuperEventMsg (SUPER, @selector(mouseDown:), theEvent);
 }
 
 //------------------------------------------------------------------------------------
@@ -294,7 +294,7 @@ static void VSTGUI_NSView_rightMouseDown (id self, SEL _cmd, NSEvent* theEvent)
 {
 	__OBJC_SUPER(self)
 	if (![self onMouseDown: theEvent])
-		objc_msgSendSuper (SUPER, @selector(rightMouseDown:), theEvent);
+		SuperEventMsg (SUPER, @selector(rightMouseDown:), theEvent);
 }
 
 //------------------------------------------------------------------------------------
@@ -302,7 +302,7 @@ static void VSTGUI_NSView_otherMouseDown (id self, SEL _cmd, NSEvent* theEvent)
 {
 	__OBJC_SUPER(self)
 	if (![self onMouseDown: theEvent])
-		objc_msgSendSuper (SUPER, @selector(otherMouseDown:), theEvent);
+		SuperEventMsg (SUPER, @selector(otherMouseDown:), theEvent);
 }
 
 //------------------------------------------------------------------------------------
@@ -310,7 +310,7 @@ static void VSTGUI_NSView_mouseUp (id self, SEL _cmd, NSEvent* theEvent)
 {
 	__OBJC_SUPER(self)
 	if (![self onMouseUp: theEvent])
-		objc_msgSendSuper (SUPER, @selector(mouseUp:), theEvent);
+		SuperEventMsg (SUPER, @selector(mouseUp:), theEvent);
 }
 
 //------------------------------------------------------------------------------------
@@ -318,7 +318,7 @@ static void VSTGUI_NSView_rightMouseUp (id self, SEL _cmd, NSEvent* theEvent)
 {
 	__OBJC_SUPER(self)
 	if (![self onMouseUp: theEvent])
-		objc_msgSendSuper (SUPER, @selector(rightMouseUp:), theEvent);
+		SuperEventMsg (SUPER, @selector(rightMouseUp:), theEvent);
 }
 
 //------------------------------------------------------------------------------------
@@ -326,7 +326,7 @@ static void VSTGUI_NSView_otherMouseUp (id self, SEL _cmd, NSEvent* theEvent)
 {
 	__OBJC_SUPER(self)
 	if (![self onMouseUp: theEvent])
-		objc_msgSendSuper (SUPER, @selector(otherMouseUp:), theEvent);
+		SuperEventMsg (SUPER, @selector(otherMouseUp:), theEvent);
 }
 
 //------------------------------------------------------------------------------------
@@ -334,7 +334,7 @@ static void VSTGUI_NSView_mouseMoved (id self, SEL _cmd, NSEvent* theEvent)
 {
 	__OBJC_SUPER(self)
 	if (![self onMouseMoved: theEvent])
-		objc_msgSendSuper (SUPER, @selector(mouseMoved:), theEvent);
+		SuperEventMsg (SUPER, @selector(mouseMoved:), theEvent);
 }
 
 //------------------------------------------------------------------------------------
@@ -342,7 +342,7 @@ static void VSTGUI_NSView_mouseDragged (id self, SEL _cmd, NSEvent* theEvent)
 {
 	__OBJC_SUPER(self)
 	if (![self onMouseMoved: theEvent])
-		objc_msgSendSuper (SUPER, @selector(mouseDragged:), theEvent);
+		SuperEventMsg (SUPER, @selector(mouseDragged:), theEvent);
 }
 
 //------------------------------------------------------------------------------------
@@ -350,7 +350,7 @@ static void VSTGUI_NSView_rightMouseDragged (id self, SEL _cmd, NSEvent* theEven
 {
 	__OBJC_SUPER(self)
 	if (![self onMouseMoved: theEvent])
-		objc_msgSendSuper (SUPER, @selector(rightMouseDragged:), theEvent);
+		SuperEventMsg (SUPER, @selector(rightMouseDragged:), theEvent);
 }
 
 //------------------------------------------------------------------------------------
@@ -358,7 +358,7 @@ static void VSTGUI_NSView_otherMouseDragged (id self, SEL _cmd, NSEvent* theEven
 {
 	__OBJC_SUPER(self)
 	if (![self onMouseMoved: theEvent])
-		objc_msgSendSuper (SUPER, @selector(otherMouseDragged:), theEvent);
+		SuperEventMsg (SUPER, @selector(otherMouseDragged:), theEvent);
 }
 
 //------------------------------------------------------------------------------------
