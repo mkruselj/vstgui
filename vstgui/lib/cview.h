@@ -101,6 +101,9 @@ public:
 	/** called when the mouse leaves this view */
 	virtual CMouseEventResult onMouseExited (CPoint& where, const CButtonState& buttons) {return kMouseEventNotImplemented;}
 
+	/** called on macos pinch gestures */
+	virtual bool magnify( CPoint &where, float amount ) { return false; }
+
 	void setHitTestPath (CGraphicsPath* path);
 	/** check if where hits this view */
 	virtual bool hitTest (const CPoint& where, const CButtonState& buttons = -1);

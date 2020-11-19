@@ -1734,6 +1734,16 @@ void CFrame::platformScaleFactorChanged (double newScaleFactor)
 }
 
 //-----------------------------------------------------------------------------
+void CFrame::platformMagnify (CPoint& where, float mag)
+{
+	if (!getMouseEnabled ())
+		return;
+	Impl::PostEventHandler peh (*pImpl);
+	CollectInvalidRects cir (this);
+	magnify (where, mag);
+}
+
+//-----------------------------------------------------------------------------
 void CFrame::dispatchNewScaleFactor (double newScaleFactor)
 {
 	pImpl->scaleFactorChangedListenerList.forEach ([&] (IScaleFactorChangedListener* listener) {

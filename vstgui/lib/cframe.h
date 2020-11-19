@@ -248,6 +248,7 @@ protected:
 	void platformOnActivate (bool state) override;
 	void platformOnWindowActivate (bool state) override;
 	void platformScaleFactorChanged (double newScaleFactor) override;
+	void platformMagnify( CPoint &where, float magnify ) override;
 #if VSTGUI_TOUCH_EVENT_HANDLING
 	void platformOnTouchEvent (ITouchEvent& event) override;
 #endif

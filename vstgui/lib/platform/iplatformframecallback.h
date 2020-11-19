@@ -53,6 +53,9 @@ public:
 	
 	virtual void platformScaleFactorChanged (double newScaleFactor) = 0;
 
+	// For now only Mac supports this gesture
+	virtual void platformMagnify(CPoint &where, float dx) = 0;
+
 #if VSTGUI_TOUCH_EVENT_HANDLING
 	virtual void platformOnTouchEvent (ITouchEvent& event) = 0;
 #endif

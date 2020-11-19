@@ -3,7 +3,7 @@
 // distribution and at http://github.com/steinbergmedia/vstgui/LICENSE
 
 #import "nsviewframe.h"
-
+#import <iostream>
 #if MAC_COCOA
 
 #import "cocoahelpers.h"
@@ -48,6 +48,7 @@ static Class viewClass = nullptr;
 - (BOOL) onMouseDown: (NSEvent*) event;
 - (BOOL) onMouseUp: (NSEvent*) event;
 - (BOOL) onMouseMoved: (NSEvent*) event;
+- (void) magnifyWithEvent: (NSEvent *) event;
 @end
 
 //------------------------------------------------------------------------------------
@@ -262,6 +263,20 @@ static BOOL VSTGUI_NSView_onMouseUp (id self, SEL _cmd, NSEvent* theEvent)
 	CPoint p = pointFromNSPoint (nsPoint);
 	CMouseEventResult result = _vstguiframe->platformOnMouseUp (p, buttons);
 	return (result != kMouseEventNotHandled) ? YES : NO;
+}
+
+static void VSTGUI_NSView_magnifyWithEvent( id self, SEL _cmd, NSEvent *theEvent )
+{
+   IPlatformFrameCallback* _vstguiframe = getFrame (self);
+   if (!_vstguiframe)
+      return;
+
+   NSPoint nsPoint = [theEvent locationInWindow];
+   nsPoint = [self convertPoint:nsPoint fromView:nil];
+   CPoint p = pointFromNSPoint (nsPoint);
+   float dz = [theEvent magnification];
+
+   _vstguiframe->platformMagnify (p, dz);
 }
 
 //------------------------------------------------------------------------------------
@@ -750,6 +765,8 @@ void NSViewFrame::initClass ()
 		VSTGUI_CHECK_YES(class_addMethod (viewClass, @selector(onMouseDown:), IMP (VSTGUI_NSView_onMouseDown), "B@:@:^:"))
 		VSTGUI_CHECK_YES(class_addMethod (viewClass, @selector(onMouseUp:), IMP (VSTGUI_NSView_onMouseUp), "B@:@:^:"))
 		VSTGUI_CHECK_YES(class_addMethod (viewClass, @selector(onMouseMoved:), IMP (VSTGUI_NSView_onMouseMoved), "B@:@:^:"))
+
+                VSTGUI_CHECK_YES(class_addMethod (viewClass, @selector(magnifyWithEvent:), IMP (VSTGUI_NSView_magnifyWithEvent), "v@:@:^:"))
 		VSTGUI_CHECK_YES(class_addMethod (viewClass, @selector(mouseDown:), IMP (VSTGUI_NSView_mouseDown), "v@:@:^:"))
 		VSTGUI_CHECK_YES(class_addMethod (viewClass, @selector(rightMouseDown:), IMP (VSTGUI_NSView_rightMouseDown), "v@:@:^:"))
 		VSTGUI_CHECK_YES(class_addMethod (viewClass, @selector(otherMouseDown:), IMP (VSTGUI_NSView_otherMouseDown), "v@:@:^:"))

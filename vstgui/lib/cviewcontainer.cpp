@@ -1448,6 +1448,26 @@ bool CViewContainer::attached (CView* parent)
 	}
 	return result;
 }
+bool CViewContainer::magnify (CPoint& where, float amount)
+{
+	// convert to relativ pos
+	CPoint where2 (where);
+	where2.offset (-getViewSize ().left, -getViewSize ().top);
+	getTransform ().inverse ().transform (where2);
+
+
+	for (auto it = pImpl->children.rbegin (), end = pImpl->children.rend (); it != end; ++it)
+	{
+		auto pV = *it;
+
+		if (pV && pV->isVisible () && pV->hitTest (where2))
+		{
+			if( pV->magnify( where, amount ) )
+				return true;
+		}
+	}
+	return false;
+}
 
 #if DEBUG
 static int32_t _debugDumpLevel = 0;

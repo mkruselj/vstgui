@@ -89,6 +89,8 @@ public:
 	/** change view z order position */
 	virtual bool changeViewZOrder (CView* view, uint32_t newIndex);
 
+	bool magnify (CPoint& where, float amount) override;
+
 	virtual bool hitTestSubViews (const CPoint& where, const CButtonState& buttons = -1);
 
 	/** enable or disable autosizing subviews. Per default this is enabled. */
