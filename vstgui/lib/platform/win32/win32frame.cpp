@@ -875,7 +875,11 @@ LONG_PTR WINAPI Win32Frame::proc (HWND hwnd, UINT message, WPARAM wParam, LPARAM
 				buttons |= kAlt;
 			if (isTouchActive)
 				buttons |= kTouch;
-			CPoint where (GET_X_LPARAM (lParam), GET_Y_LPARAM (lParam));
+
+			// Win32OptionMenu::popup does ClientToScreen for TrackPopupMenu, must do the opposite for MouseUp.
+			POINT p{ GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) };
+			ScreenToClient(windowHandle, &p);
+			CPoint where(p.x, p.y);
 			pFrame->platformOnMouseUp (where, buttons);
 			ReleaseCapture ();
 			return 0;
