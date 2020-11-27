@@ -80,6 +80,7 @@ protected:
 	CRect paintRect;
 	bool inPaint;
 	bool mouseInside;
+	bool inPopup = false;
 
 	bool isTouchActive;
 
