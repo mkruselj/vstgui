@@ -191,10 +191,12 @@ bool CGBitmap::load (const CResourceDescription& desc)
 #if DEBUG
 	if (result == false)
 	{
+/*
 		if (desc.type == CResourceDescription::kIntegerType)
 			DebugPrint ("*** Bitmap Nr.:%d not found.\n", desc.u.id);
 		else
 			DebugPrint ("*** Bitmap '%s' not found.\n", desc.u.name);
+*/
 	}
 #endif
 	return result;
