@@ -1462,7 +1462,7 @@ bool CViewContainer::magnify (CPoint& where, float amount)
 
 		if (pV && pV->isVisible () && pV->hitTest (where2))
 		{
-			if( pV->magnify( where, amount ) )
+			if( pV->magnify( where2, amount ) )
 				return true;
 		}
 	}
