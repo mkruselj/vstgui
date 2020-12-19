@@ -540,7 +540,19 @@ CView* setupGenericOptionMenu (Proc clickCallback, CViewContainer* container,
 			dataSource->opensLeft = true;
 			CPoint xfm( parentWidth, 0 );
 			frame->getTransform().transform( xfm );
-			viewRect.offset (frSize.right - viewRect.right - xfm.x, 0);
+                        if( parentDataSource && ! parentDataSource->opensLeft )
+                        {
+                            // the view rect will have its left alighned with parent right
+                            // we want right aligned with parent left. So we have to shift
+                            // by the parent width and by my width
+                            /*std::cout << "PW=" << parentWidth << " vrL=" << viewRect.left
+                                      << " vrW=" << viewRect.getWidth() << " rfm.x=" << rfm.x
+                                      << " xfm.x=" << xfm.x << std::endl;
+                            */
+                            viewRect.offset( -xfm.x -viewRect.getWidth(), 0 );
+			} else {
+				viewRect.offset (frSize.right - viewRect.right - xfm.x, 0);
+			}
 		} 
 
 		if (frSize.left > viewRect.left)
