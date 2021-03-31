@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <cstdio>
 #include <cstring>
+#include <limits>
 #include <string>
 
 //-----------------------------------------------------------------------------
@@ -126,6 +127,8 @@
     #include <type_traits>
     #include <algorithm>
     #include <climits>
+    #include <limits>
+
     using std::min;
     using std::max;
 	#ifndef LINUX
